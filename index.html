@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Student Portal Login</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontsource-inter@5.0.16/index.css" />
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef4f0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Background image layer */
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    background-image: url('https://image.qwenlm.ai/public_source/032bd73d-d92c-460d-a80e-2b3a80384dc7/1e80ec048-9ded-40b5-ba84-8a6740f8509b.png');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+  }
+
+  .bg-layer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(232, 245, 233, 0.75) 0%, rgba(200, 225, 210, 0.6) 50%, rgba(180, 215, 200, 0.7) 100%);
+    backdrop-filter: blur(2px);
+  }
+
+  /* Floating decorative shapes */
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .shape-1 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(34, 139, 34, 0.25), transparent 70%);
+    top: -100px;
+    left: -100px;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .shape-2 {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(60, 179, 113, 0.2), transparent 70%);
+    bottom: -80px;
+    right: -80px;
+    animation: float 10s ease-in-out infinite reverse;
+  }
+
+  .shape-3 {
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(144, 238, 144, 0.3), transparent 70%);
+    top: 40%;
+    right: 10%;
+    animation: float 12s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.05); }
+  }
+
+  /* Login container */
+  .login-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 460px;
+    padding: 20px;
+    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .login-card {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 48px 40px;
+    box-shadow:
+      0 20px 60px rgba(34, 139, 34, 0.15),
+      0 1px 3px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+
+  /* Logo / Icon */
+  .logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .logo-icon {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #2e8b57 0%, #3cb371 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(46, 139, 87, 0.35);
+    position: relative;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 10px 25px rgba(46, 139, 87, 0.35); }
+    50% { box-shadow: 0 10px 35px rgba(46, 139, 87, 0.55); }
+  }
+
+  .logo-icon svg {
+    width: 40px;
+    height: 40px;
+    fill: white;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a3a2a;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: #5a7a6a;
+    font-weight: 400;
+  }
+
+  /* Form */
+  .form-group {
+    margin-bottom: 18px;
+    position: relative;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2e5d4a;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .input-wrapper svg {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    fill: #6ba88a;
+    transition: fill 0.3s ease;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 14px 16px 14px 48px;
+    font-size: 15px;
+    border: 2px solid #e0ede5;
+    border-radius: 12px;
+    background: #f7faf8;
+    color: #1a3a2a;
+    transition: all 0.3s ease;
+    outline: none;
+    font-family: inherit;
+  }
+
+  .form-group input::placeholder {
+    color: #9ab5a5;
+  }
+
+  .form-group input:focus {
+    border-color: #3cb371;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(60, 179, 113, 0.12);
+  }
+
+  .form-group input:focus + svg,
+  .form-group input:focus ~ svg {
+    fill: #2e8b57;
+  }
+
+  .input-wrapper:focus-within svg {
+    fill: #2e8b57;
+  }
+
+  /* Options row */
+  .options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 13px;
+  }
+
+  .remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #4a6b5a;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .remember input {
+    width: 16px;
+    height: 16px;
+    accent-color: #2e8b57;
+    cursor: pointer;
+  }
+
+  .forgot {
+    color: #2e8b57;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .forgot:hover {
+    color: #1e5d3a;
+    text-decoration: underline;
+  }
+
+  /* Button */
+  .login-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #2e8b57 0%, #3cb371 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(46, 139, 87, 0.3);
+    font-family: inherit;
+    letter-spacing: 0.3px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(46, 139, 87, 0.4);
+  }
+
+  .login-btn:active {
+    transform: translateY(0);
+  }
+
+  .login-btn.loading {
+    pointer-events: none;
+    opacity: 0.9;
+  }
+
+  .login-btn .btn-text {
+    transition: opacity 0.3s ease;
+  }
+
+  .login-btn.loading .btn-text {
+    opacity: 0;
+  }
+
+  .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 22px;
+    height: 22px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .login-btn.loading .spinner {
+    opacity: 1;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* Divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 24px 0;
+    color: #8aaa9a;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #d0e5d8;
+  }
+
+  .divider span {
+    padding: 0 16px;
+  }
+
+  /* Sign up */
+  .signup {
+    text-align: center;
+    font-size: 14px;
+    color: #5a7a6a;
+  }
+
+  .signup a {
+    color: #2e8b57;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .signup a:hover {
+    color: #1e5d3a;
+    text-decoration: underline;
+  }
+
+  /* Toast notification */
+  .toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a3a2a;
+    z-index: 100;
+    transform: translateX(400px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 4px solid #3cb371;
+  }
+
+  .toast.show {
+    transform: translateX(0);
+  }
+
+  .toast.error {
+    border-left-color: #e74c3c;
+  }
+
+  /* Responsive */
+  @media (max-width: 520px) {
+    .login-card {
+      padding: 36px 24px;
+    }
+    .header h1 {
+      font-size: 24px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="bg-layer"></div>
+  <div class="shape shape-1"></div>
+  <div class="shape shape-2"></div>
+  <div class="shape shape-3"></div>
+
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="logo">
+        <div class="logo-icon">
+          <!-- Graduation cap icon -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="header">
+        <h1>Student Portal Login</h1>
+        <p>Welcome back! Sign in to access your courses.</p>
+      </div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-wrapper">
+            <input type="text" id="username" placeholder="Enter your username" required />
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="password" placeholder="Enter your password" required />
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="options">
+          <label class="remember">
+            <input type="checkbox" id="remember" />
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="forgot" onclick="showToast('Password reset link sent to your email!', false); return false;">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">
+          <span class="btn-text">Log In</span>
+          <span class="spinner"></span>
+        </button>
+      </form>
+
+      <div class="divider"><span>or</span></div>
+
+      <div class="signup">
+        Don't have an account? <a href="#" onclick="showToast('Redirecting to registration...', false); return false;">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const toast = document.getElementById('toast');
+
+    let toastTimeout;
+
+    function showToast(message, isError = false) {
+      clearTimeout(toastTimeout);
+      toast.textContent = message;
+      toast.classList.toggle('error', isError);
+      toast.classList.add('show');
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!username || !password) {
+        showToast('Please fill in all fields', true);
+        return;
+      }
+
+      if (password.length < 6) {
+        showToast('Password must be at least 6 characters', true);
+        return;
+      }
+
+      loginBtn.classList.add('loading');
+
+      setTimeout(() => {
+        loginBtn.classList.remove('loading');
+        showToast(`Welcome back, ${username}! 🎓`, false);
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
+
